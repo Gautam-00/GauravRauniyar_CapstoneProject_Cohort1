@@ -84,10 +84,16 @@ The application does not implement authentication. An anonymous customer/client 
 - **Purpose**: Submit a new rating.
 - **Body**: `{ "cakeId": "string", "rating": 5, "comment": "string" }`
 - **Response**: `201 Created` Rating object.
+- **Error Examples**:
+  - `400 Bad Request`: `{"message": "Rating validation failed: rating: rating must be an integer"}` (if decimal)
+  - `400 Bad Request`: `{"message": "Rating validation failed: rating: rating is required"}` (if missing)
+  - `400 Bad Request`: `{"message": "Rating validation failed: cakeId: cakeId is required"}` (if missing)
+  - `400 Bad Request`: `{"message": "Rating validation failed: rating: rating must be between 1 and 5"}` (if out of bounds)
 
 ### `GET /ratings/average/:cakeId`
 - **Purpose**: Get the average rating for a specific cake.
 - **Response**: `200 OK` `{ "cakeId": "string", "averageRating": 4.5, "totalRatings": 12 }`
+- **Edge Case (No Ratings)**: Returns `200 OK` `{ "cakeId": "string", "averageRating": 0, "totalRatings": 0 }`
 
 ---
 

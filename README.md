@@ -95,14 +95,14 @@ The application will eventually be:
 
 ## 9. Development Phases
 
-Phase 0 — Repository and project foundation - **COMPLETED**
-Phase 1 — Architecture/data/API contracts - **COMPLETED**
-Phase 2 — Cake Catalog Service — COMPLETED
-Phase 3 — Order Service — COMPLETED
-Phase 4 — Rating Service
-Phase 5 — Notification Service + RabbitMQ
-Phase 6/7 — Express Gateway
-Phase 8 — React Frontend
+- [x] Phase 0: Repository & Project Foundation
+- [x] Phase 1: Architecture, Data Model & API Contracts
+- [x] Phase 2: Cake Catalog Service (Port 3001)
+- [x] Phase 3: Order Service (Port 3002)
+- [x] Phase 4: Rating Service (Port 3003)
+- [ ] Phase 5: Notification Service (Port 3004)
+- [ ] Phase 6: API Gateway (Port 3000)
+- [ ] Phase 7: React Frontend (Port 3005)
 Phase 9 — Complete local end-to-end integration
 Phase 10 — Dockerization
 Phase 11 — Docker integration

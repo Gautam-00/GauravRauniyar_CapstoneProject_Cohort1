@@ -42,9 +42,11 @@ Each microservice logically owns a separate database. No cross-database queries 
 ### Collection: `ratings`
 - `_id`: ObjectId
 - `cakeId`: String (Required)
-- `rating`: Number (Required, 1-5)
+- `rating`: Number (Required, 1-5, Integer only)
 - `comment`: String (Optional)
 - `createdAt`: Date
+
+*Validation Note*: Mongoose schema validation enforces `required` fields. The `rating` field is strictly enforced as an integer between 1 and 5. `updatedAt` is explicitly omitted based on the initial data schema requirements.
 
 ## 4. Notification Service (`notification_db`)
 
