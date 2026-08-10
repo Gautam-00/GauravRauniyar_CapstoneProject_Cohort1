@@ -24,18 +24,18 @@ Each microservice logically owns a separate database. No cross-database queries 
 - `_id`: ObjectId
 - `customerId`: String (Required) - Unique ID from the frontend
 - `items`: Array of Objects
-  - `cakeId`: String
-  - `name`: String (Denormalized from Catalog at add time)
-  - `price`: Number (Snapshotted from Catalog at add time. Follows MVP Price Snapshot Assumption: basket retains the price even if catalog changes.)
-  - `quantity`: Number
+  - `cakeId`: String (Required)
+  - `name`: String (Required, Denormalized from Catalog at add time)
+  - `price`: Number (Required, Snapshotted from Catalog at add time. Follows MVP Price Snapshot Assumption)
+  - `quantity`: Number (Required, Min: 1)
 
 ### Collection: `orders`
 - `_id`: ObjectId
 - `customerId`: String (Required)
 - `items`: Array (Same structure as Basket items)
-- `totalAmount`: Number (Required)
+- `totalAmount`: Number (Required, Min: 0)
 - `status`: String (Default: "COMPLETED")
-- `createdAt`: Date
+- `createdAt` / `updatedAt`: Dates (Automatically managed via Mongoose timestamps)
 
 ## 3. Rating Service (`rating_db`)
 

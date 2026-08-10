@@ -98,7 +98,7 @@ The application will eventually be:
 Phase 0 — Repository and project foundation - **COMPLETED**
 Phase 1 — Architecture/data/API contracts - **COMPLETED**
 Phase 2 — Cake Catalog Service — COMPLETED
-Phase 3 — Order Service — NOT STARTED
+Phase 3 — Order Service — COMPLETED
 Phase 4 — Rating Service
 Phase 5 — Notification Service + RabbitMQ
 Phase 6/7 — Express Gateway

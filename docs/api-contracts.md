@@ -42,26 +42,40 @@ The application does not implement authentication. An anonymous customer/client 
 ## 2. Order Service APIs
 ### `GET /basket`
 - **Purpose**: Retrieve the user's basket. (Uses `X-Customer-Id`).
-- **Response**: `200 OK` Basket object. Returns empty basket structure if none exists.
+- **Response**: `200 OK` Returns the basket object. If it doesn't exist, returns `{ "customerId": "<id>", "items": [] }`.
+- **Error Examples**:
+  - `400 Bad Request`: `{"message": "Missing X-Customer-Id header"}`
 
 ### `POST /basket/items`
-- **Purpose**: Add a cake to the basket.
-- **Body**: `{ "cakeId": "string", "quantity": number }`
-- **Logic**: Service makes a direct internal synchronous REST call to `GET /cakes/:cakeId` on the Catalog Service (bypassing Gateway) to validate existence, availability, and fetch the trusted name and price. If valid, the price and name are stored as a snapshot in the basket item. If the catalog price changes later, the basket item continues using its snapshotted price (MVP Price Snapshot Assumption).
-- **Response**: `200 OK` Updated basket. Error `404` if cake not found in Catalog.
+- **Purpose**: Add a cake to the basket or increment existing quantity.
+- **Body**: `{ "cakeId": "string", "quantity": number }` (quantity must be positive integer)
+- **Logic**: Service makes a direct synchronous REST call to `GET /cakes/:cakeId` on the Catalog Service.
+- **Response**: `200 OK` Updated basket.
+- **Error Examples**:
+  - `400 Bad Request`: `{"message": "Quantity must be a positive integer"}`
+  - `400 Bad Request`: `{"message": "Cake is currently unavailable"}`
+  - `404 Not Found`: `{"message": "Cake not found in Catalog"}`
+  - `503 Service Unavailable`: `{"message": "Catalog Service is unavailable"}`
 
 ### `PUT /basket/items/:cakeId`
 - **Purpose**: Update item quantity.
 - **Body**: `{ "quantity": number }`
 - **Response**: `200 OK` Updated basket.
+- **Error Examples**:
+  - `400 Bad Request`: `{"message": "Quantity must be a positive integer"}`
+  - `404 Not Found`: `{"message": "Cake not found in basket"}`
 
 ### `DELETE /basket/items/:cakeId`
 - **Purpose**: Remove item from basket.
 - **Response**: `200 OK` Updated basket.
+- **Error Examples**:
+  - `404 Not Found`: `{"message": "Cake not found in basket"}`
 
 ### `POST /checkout`
-- **Purpose**: Convert current basket to an order.
-- **Response**: `201 Created` Order object. Error `400` if basket is empty.
+- **Purpose**: Convert current basket to an order and calculate `totalAmount` based on snapshotted prices.
+- **Response**: `201 Created` Order object.
+- **Error Examples**:
+  - `400 Bad Request`: `{"message": "Basket is empty"}`
 
 ---
 
