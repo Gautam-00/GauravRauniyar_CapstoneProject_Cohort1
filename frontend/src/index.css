@@ -1,0 +1,56 @@
+:root {
+  /* Color Palette */
+  --color-background: #FAFAFA;     /* Soft ivory/cream */
+  --color-surface: #FFFFFF;        /* Pure white for cards */
+  --color-primary: #D4A373;        /* Warm baked beige/caramel */
+  --color-accent: #E5989B;         /* Muted berry/rose */
+  --color-text-main: #4A4A4A;      /* Charcoal/coffee for readability */
+  --color-text-muted: #8D8D8D;     /* Soft gray for secondary text */
+  --color-border: #EAEAEA;         /* Subtle dividing lines */
+  --color-error: #D9534F;          /* Muted red for errors */
+
+  /* Typography */
+  --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-size-base: 16px;
+  --font-weight-regular: 400;
+  --font-weight-bold: 600;
+
+  /* Spacing & Borders */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  color: var(--color-text-main);
+  background-color: var(--color-background);
+  line-height: 1.5;
+}
+
+/* Responsive Container Foundation */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-lg);
+  }
+}
