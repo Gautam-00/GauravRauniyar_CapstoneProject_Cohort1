@@ -4,6 +4,7 @@ const connectDB = require('./config/db');
 const basketRoutes = require('./routes/basketRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const errorHandler = require('./middleware/errorHandler');
+const { connectRabbitMQ } = require('./services/rabbitmqPublisher');
 
 const app = express();
 app.use(express.json());
@@ -14,6 +15,7 @@ process.env.MONGO_URI = MONGO_URI;
 
 const startServer = async () => {
   await connectDB();
+  await connectRabbitMQ();
 
   app.use('/basket', basketRoutes);
   app.use('/', orderRoutes); // /checkout

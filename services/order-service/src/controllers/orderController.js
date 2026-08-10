@@ -1,5 +1,7 @@
 const Basket = require('../models/Basket');
 const Order = require('../models/Order');
+const crypto = require('crypto');
+const { publishOrderCompleted } = require('../services/rabbitmqPublisher');
 
 // POST /checkout
 const checkout = async (req, res, next) => {
@@ -29,6 +31,19 @@ const checkout = async (req, res, next) => {
     // Consistency Limitation: If this delete fails, the order exists but basket isn't cleared.
     // MVP accepts this risk.
     await Basket.deleteOne({ _id: basket._id });
+
+    // Publish ORDER_COMPLETED event to RabbitMQ
+    const eventPayload = {
+      eventId: crypto.randomUUID(),
+      orderId: order._id.toString(),
+      customerId: req.customerId,
+      totalAmount,
+      timestamp: new Date().toISOString()
+    };
+    
+    // MVP Consistency Limitation: Fire and forget.
+    // If publish fails, order is placed but notification is never sent.
+    await publishOrderCompleted(eventPayload);
 
     res.status(201).json(order);
   } catch (error) {

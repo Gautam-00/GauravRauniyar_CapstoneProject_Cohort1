@@ -100,7 +100,7 @@ The application will eventually be:
 - [x] Phase 2: Cake Catalog Service (Port 3001)
 - [x] Phase 3: Order Service (Port 3002)
 - [x] Phase 4: Rating Service (Port 3003)
-- [ ] Phase 5: Notification Service (Port 3004)
+- [x] Phase 5: Notification Service + RabbitMQ (Port 3004)
 - [ ] Phase 6: API Gateway (Port 3000)
 - [ ] Phase 7: React Frontend (Port 3005)
 Phase 9 — Complete local end-to-end integration

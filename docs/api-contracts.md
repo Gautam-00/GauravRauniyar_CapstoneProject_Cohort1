@@ -99,5 +99,8 @@ The application does not implement authentication. An anonymous customer/client 
 
 ## 4. Notification Service APIs
 ### `GET /notifications`
-- **Purpose**: Retrieve notifications for the user (Uses `X-Customer-Id`).
+- **Purpose**: Retrieve all in-app notifications for the anonymous customer.
+- **Headers**: `X-Customer-Id: "string"` (Required)
 - **Response**: `200 OK` Array of notification objects.
+- **Error Examples**:
+  - `400 Bad Request`: `{"message": "Missing X-Customer-Id header"}` (if header missing)

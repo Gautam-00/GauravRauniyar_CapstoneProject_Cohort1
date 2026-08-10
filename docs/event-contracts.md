@@ -24,7 +24,11 @@ The event contains the minimum necessary data for the Notification service to fo
 
 ### Consumer Behaviour
 Upon receiving the `ORDER_COMPLETED` event, the Notification Service will:
-1. Parse the payload.
-2. Generate an in-app message string, e.g., `"Your order #60d5ecb... for $45.50 has been confirmed!"`
-3. Save the record into `notification_db.notifications`.
+1. Parse the payload. (If parsing fails or fields are missing, it drops the message without requeue).
+2. Generate an in-app message string, e.g., `"Your order #60d5ecb... for $45.50 has been completed successfully."`
+3. Save the record into `notification_db.notifications`. (If this fails, it rejects the message *with requeue* so RabbitMQ can try again).
 4. Acknowledge (ACK) the message to RabbitMQ.
+
+### MVP Consistency Limitations
+1. **Publisher Failure**: If RabbitMQ is unavailable during checkout, the Order Service logs the error but still returns `201 Created` because the core order was placed and basket cleared. The `ORDER_COMPLETED` event is permanently lost, meaning no notification will be delivered. This prioritizes core functionality over strict consistency.
+2. **Idempotency/Duplicate Delivery**: The `notification_db` schema does not store `eventId`. If RabbitMQ delivers the exact same message twice, the Notification Service will process both, resulting in duplicate notifications. MVP accepts this risk.

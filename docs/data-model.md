@@ -56,7 +56,9 @@ Each microservice logically owns a separate database. No cross-database queries 
 - `orderId`: String (Required)
 - `message`: String (Required)
 - `read`: Boolean (Default: false)
-- `createdAt`: Date
+- `createdAt`: Date (Default: Date.now)
+
+*Validation Note*: The schema does not enforce idempotency (e.g., no `eventId`). Duplicate RabbitMQ messages will create duplicate notifications as per MVP limitations.
 
 ## Seeding Strategy
 - **Mechanism**: The Catalog Service will check `db.cakes.countDocuments()` on startup. If `0`, it inserts a predefined array of demo cakes.
