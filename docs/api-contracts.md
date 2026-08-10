@@ -16,11 +16,26 @@ The application does not implement authentication. An anonymous customer/client 
 ### `GET /cakes`
 - **Purpose**: List and filter cakes.
 - **Query Params**: `name` (string), `category` (string), `minPrice` (number), `maxPrice` (number)
-- **Response**: `200 OK` Array of cake objects.
+- **Response Example**:
+  ```json
+  [
+    {
+      "_id": "6a7979c5cfcee900e592f0fd",
+      "name": "Classic Chocolate Truffle",
+      "category": "Chocolate",
+      "price": 35,
+      "available": true,
+      "imageUrl": "/images/chocolate-truffle.jpg"
+    }
+  ]
+  ```
 
 ### `GET /cakes/:id`
 - **Purpose**: Get cake details.
-- **Response**: `200 OK` Cake object, or `404 Not Found`.
+- **Response**: `200 OK` Cake object.
+- **Error Examples**:
+  - `400 Bad Request`: `{"message": "Invalid Cake ID format"}` (If `:id` is not a valid ObjectId)
+  - `404 Not Found`: `{"message": "Cake not found"}` (If valid ID format but does not exist)
 
 ---
 

@@ -6,12 +6,15 @@ Each microservice logically owns a separate database. No cross-database queries 
 
 ### Collection: `cakes`
 - `_id`: ObjectId
-- `name`: String (Required) - e.g., "Chocolate Truffle"
+- `name`: String (Required)
 - `description`: String (Optional)
-- `category`: String (Required) - e.g., "Chocolate", "Fruit"
-- `price`: Number (Required)
+- `category`: String (Required)
+- `price`: Number (Required, Min: 0)
 - `available`: Boolean (Required, default: true)
-- `imageUrl`: String (Required) - Path to static frontend image, e.g., `/images/chocolate-truffle.jpg`
+- `imageUrl`: String (Required)
+- `createdAt` / `updatedAt`: Dates (Automatically managed via Mongoose timestamps)
+
+*Validation Note*: Mongoose schema validation enforces `required` fields and ensures `price` cannot be negative.
 
 ## 2. Order Service (`order_db`)
 

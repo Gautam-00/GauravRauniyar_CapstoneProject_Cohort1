@@ -95,19 +95,19 @@ The application will eventually be:
 
 ## 9. Development Phases
 
-1. Repository and project foundation
-2. Architecture/data/API contracts
-3. Cake Catalog Service
-4. Order Service
-5. Rating Service
-6. Notification Service + RabbitMQ
-7. Express Gateway
-8. React Frontend
-9. Complete local end-to-end integration
-10. Dockerization
-11. Docker integration
-12. Kubernetes + Minikube
-13. Kubernetes end-to-end testing
+Phase 0 — Repository and project foundation - **COMPLETED**
+Phase 1 — Architecture/data/API contracts - **COMPLETED**
+Phase 2 — Cake Catalog Service — COMPLETED
+Phase 3 — Order Service — NOT STARTED
+Phase 4 — Rating Service
+Phase 5 — Notification Service + RabbitMQ
+Phase 6/7 — Express Gateway
+Phase 8 — React Frontend
+Phase 9 — Complete local end-to-end integration
+Phase 10 — Dockerization
+Phase 11 — Docker integration
+Phase 12 — Kubernetes + Minikube
+Phase 13 — Kubernetes end-to-end testing
 14. Docker Hub
 15. GitHub Actions CI/CD
 16. Final documentation/demo/ZIP submission
