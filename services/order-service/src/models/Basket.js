@@ -4,6 +4,7 @@ const basketItemSchema = new mongoose.Schema({
   cakeId: { type: String, required: true },
   name: { type: String, required: true },
   price: { type: Number, required: true },
+  imageUrl: { type: String, required: true },
   quantity: { type: Number, required: true, min: 1 }
 }, { _id: false });
 

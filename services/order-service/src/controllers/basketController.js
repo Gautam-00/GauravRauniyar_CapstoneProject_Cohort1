@@ -60,6 +60,7 @@ const addItem = async (req, res, next) => {
         cakeId: result.cake._id,
         name: result.cake.name,
         price: result.cake.price, // SNAPSHOT
+        imageUrl: result.cake.imageUrl,
         quantity: quantity
       });
     }

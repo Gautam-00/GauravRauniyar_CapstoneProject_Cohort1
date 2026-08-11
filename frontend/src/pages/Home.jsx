@@ -4,8 +4,9 @@ import Hero from '../components/Hero';
 import CakeCard from '../components/CakeCard';
 import Footer from '../components/Footer';
 import { getCakes } from '../api/catalogApi';
+import { addItemToBasket } from '../api/orderApi';
 
-const Home = () => {
+const Home = ({ basket, setBasket }) => {
   const [allCakes, setAllCakes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,6 +30,15 @@ const Home = () => {
     fetchCatalog();
   }, []);
 
+  const handleAddToBasket = async (cakeId) => {
+    try {
+      const updatedBasket = await addItemToBasket(cakeId);
+      setBasket(updatedBasket);
+    } catch (err) {
+      alert("Couldn't add this cake to your basket. Please try again.");
+    }
+  };
+
   const filteredCakes = allCakes.filter(cake => {
     const matchCategory = selectedCategory === 'all' || cake.categoryId === selectedCategory;
     
@@ -44,7 +54,7 @@ const Home = () => {
 
   return (
     <>
-      <Header />
+      <Header basket={basket} />
       <Hero />
       
       <main id="menu" className="container">
@@ -96,7 +106,7 @@ const Home = () => {
         ) : (
           <div className="catalog-grid">
             {filteredCakes.map(cake => (
-              <CakeCard key={cake._id} cake={cake} />
+              <CakeCard key={cake._id} cake={cake} onAddToBasket={handleAddToBasket} />
             ))}
           </div>
         )}
