@@ -64,45 +64,40 @@ const CakeCard = ({ cake, onAddToBasket }) => {
         <span className="cake-card-category">{cake.category}</span>
         <h3 className="cake-card-title">{cake.name}</h3>
         
-        <div className="cake-card-rating" style={{ marginBottom: '12px' }}>
-          <div className="stars" style={{ display: 'flex', alignItems: 'center' }}>
+        <div className="cake-card-rating">
+          <div className="stars">
             {[1, 2, 3, 4, 5].map(star => (
               <span 
                 key={star} 
                 className="star" 
-                style={{ 
-                  cursor: isSubmitting ? 'not-allowed' : 'pointer', 
-                  color: '#ffc107', 
-                  fontSize: '1.2rem',
-                  marginRight: '2px'
-                }}
+                style={{ cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
                 onClick={() => handleStarClick(star)}
                 title={`Rate ${star} stars`}
               >
                 ★
               </span>
             ))}
-            <span style={{ marginLeft: '8px', fontSize: '0.9rem', color: '#666' }}>
+            <span style={{ marginLeft: '8px', fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
               {Number(ratingInfo.averageRating).toFixed(1)} ({ratingInfo.totalRatings})
             </span>
           </div>
           
           {showConfirm && (
-            <div className="rating-confirm" style={{ marginTop: '8px', fontSize: '0.85rem', background: '#f8f9fa', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}>
-              <p style={{ margin: '0 0 8px 0', color: '#333' }}>Give {selectedStar} stars to {cake.name}?</p>
-              {submitError && <p style={{ color: 'red', margin: '0 0 8px 0' }}>{submitError}</p>}
+            <div className="rating-confirm">
+              <p style={{ margin: '0 0 8px 0', color: 'var(--color-text-secondary)' }}>Give {selectedStar} stars to {cake.name}?</p>
+              {submitError && <p style={{ color: 'var(--color-error)', margin: '0 0 8px 0' }}>{submitError}</p>}
               <div style={{ display: 'flex', gap: '8px' }}>
                 <button 
                   onClick={handleCancelRating} 
                   disabled={isSubmitting}
-                  style={{ padding: '4px 8px', border: '1px solid #ccc', background: 'white', borderRadius: '4px', cursor: isSubmitting ? 'not-allowed' : 'pointer', color: '#333' }}
+                  style={{ padding: '4px 10px', border: '1px solid var(--color-border)', background: 'white', borderRadius: '6px', cursor: isSubmitting ? 'not-allowed' : 'pointer', color: 'var(--color-text-secondary)', fontFamily: 'inherit' }}
                 >
                   Cancel
                 </button>
                 <button 
                   onClick={handleConfirmRating} 
                   disabled={isSubmitting}
-                  style={{ padding: '4px 8px', border: 'none', background: '#e83e8c', color: 'white', borderRadius: '4px', cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
+                  style={{ padding: '4px 10px', border: 'none', background: 'var(--color-accent)', color: 'white', borderRadius: '6px', cursor: isSubmitting ? 'not-allowed' : 'pointer', fontFamily: 'inherit' }}
                 >
                   {isSubmitting ? '...' : 'Okay'}
                 </button>
@@ -112,14 +107,16 @@ const CakeCard = ({ cake, onAddToBasket }) => {
         </div>
 
         <p className="cake-card-desc">{cake.description}</p>
-        <span className="cake-card-price">₹{cake.price}</span>
-        <button 
-          className="add-to-basket-btn"
-          disabled={!cake.available || adding}
-          onClick={handleAdd}
-        >
-          {adding ? 'Adding...' : (cake.available ? 'Add to Basket' : 'Unavailable')}
-        </button>
+        <div className="cake-card-footer">
+          <span className="cake-card-price">₹{cake.price}</span>
+          <button 
+            className="add-to-basket-btn"
+            disabled={!cake.available || adding}
+            onClick={handleAdd}
+          >
+            {adding ? 'Adding...' : (cake.available ? 'Add to Basket' : 'Unavailable')}
+          </button>
+        </div>
       </div>
     </div>
   );
