@@ -8,6 +8,10 @@ const cakeSchema = new mongoose.Schema({
   description: {
     type: String
   },
+  categoryId: {
+    type: String,
+    required: true
+  },
   category: {
     type: String,
     required: true

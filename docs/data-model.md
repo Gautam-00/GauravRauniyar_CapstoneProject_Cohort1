@@ -5,13 +5,16 @@ Each microservice logically owns a separate database. No cross-database queries 
 ## 1. Catalog Service (`cake_catalog_db`)
 
 ### Collection: `cakes`
-- `_id`: ObjectId
-- `name`: String (Required)
-- `description`: String (Optional)
-- `category`: String (Required)
-- `price`: Number (Required, Min: 0)
-- `available`: Boolean (Required, default: true)
-- `imageUrl`: String (Required)
+| Field | Type | Description |
+|-------|------|-------------|
+| `_id` | ObjectId | Unique identifier (24-char hex string) |
+| `name` | String | Name of the cake |
+| `description` | String | Description of the cake |
+| `categoryId` | String | Identifier for the category |
+| `category` | String | Display name of the category |
+| `price` | Number | Price of the cake |
+| `available`| Boolean | Whether the cake is currently available |
+| `imageUrl` | String | URL to the cake image |
 - `createdAt` / `updatedAt`: Dates (Automatically managed via Mongoose timestamps)
 
 *Validation Note*: Mongoose schema validation enforces `required` fields and ensures `price` cannot be negative.

@@ -20,12 +20,14 @@ The application does not implement authentication. An anonymous customer/client 
   ```json
   [
     {
-      "_id": "6a7979c5cfcee900e592f0fd",
-      "name": "Classic Chocolate Truffle",
-      "category": "Chocolate",
-      "price": 35,
+      "_id": "60d5ecb8b392d41584c31101",
+      "name": "Classic Yellow Cake",
+      "description": "The nostalgic birthday staple paired with chocolate frosting.",
+      "categoryId": "cat_butter",
+      "category": "Butter & Shortened Cakes",
+      "price": 350,
       "available": true,
-      "imageUrl": "/images/chocolate-truffle.jpg"
+      "imageUrl": "/images/classic-yellow-cake.avif"
     }
   ]
   ```
