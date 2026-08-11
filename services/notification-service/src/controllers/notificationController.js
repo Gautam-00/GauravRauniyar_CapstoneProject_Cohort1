@@ -11,6 +11,21 @@ const getNotifications = async (req, res, next) => {
   }
 };
 
+// @desc    Mark unread notifications as read
+// @route   PATCH /notifications/read
+const markAsRead = async (req, res, next) => {
+  try {
+    await Notification.updateMany(
+      { customerId: req.customerId, read: false },
+      { $set: { read: true } }
+    );
+    res.status(200).json({ message: 'Notifications marked as read' });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
-  getNotifications
+  getNotifications,
+  markAsRead
 };

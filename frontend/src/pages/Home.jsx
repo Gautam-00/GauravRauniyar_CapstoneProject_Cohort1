@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../components/Header';
 import Hero from '../components/Hero';
 import CakeCard from '../components/CakeCard';
-import Footer from '../components/Footer';
 import { getCakes } from '../api/catalogApi';
 import { addItemToBasket } from '../api/orderApi';
 
@@ -54,7 +52,6 @@ const Home = ({ basket, setBasket }) => {
 
   return (
     <>
-      <Header basket={basket} />
       <Hero />
       
       <main id="menu" className="container">
@@ -111,8 +108,6 @@ const Home = ({ basket, setBasket }) => {
           </div>
         )}
       </main>
-
-      <Footer />
     </>
   );
 };

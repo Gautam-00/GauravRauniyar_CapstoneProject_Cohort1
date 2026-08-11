@@ -1,15 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 
-const OrderSuccessPage = () => {
+const OrderSuccessPage = ({ fetchNotifications }) => {
   const location = useLocation();
   const order = location.state?.order;
 
+  useEffect(() => {
+    if (!order || !fetchNotifications) return;
+
+    let attempts = 0;
+    const maxAttempts = 5;
+    let timer;
+
+    const checkNotifications = async () => {
+      attempts++;
+      const freshNotifications = await fetchNotifications();
+      const found = freshNotifications?.some(n => n.orderId === order._id);
+      
+      if (found || attempts >= maxAttempts) {
+        return; // Stop checking immediately
+      }
+      
+      timer = setTimeout(checkNotifications, 1000);
+    };
+
+    // Wait 1 second before first check
+    timer = setTimeout(checkNotifications, 1000);
+
+    return () => clearTimeout(timer);
+  }, [order, fetchNotifications]);
+
   return (
     <>
-      <Header basket={{ items: [] }} />
       <main className="container" style={{ minHeight: '60vh', padding: '4rem 0', textAlign: 'center' }}>
         <h2 style={{ color: '#4caf50', marginBottom: '1rem' }}>🎉 Order placed successfully!</h2>
         
@@ -31,7 +53,6 @@ const OrderSuccessPage = () => {
           Continue Shopping
         </Link>
       </main>
-      <Footer />
     </>
   );
 };

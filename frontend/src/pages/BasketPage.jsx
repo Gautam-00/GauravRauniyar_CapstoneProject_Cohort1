@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import { updateItemQuantity, removeItemFromBasket, checkout } from '../api/orderApi';
 
 const BasketPage = ({ basket, setBasket }) => {
@@ -57,7 +55,6 @@ const BasketPage = ({ basket, setBasket }) => {
 
   return (
     <>
-      <Header basket={basket} />
       <main className="container" style={{ minHeight: '60vh', padding: '2rem 0' }}>
         <h2>Your Basket</h2>
         
@@ -150,7 +147,6 @@ const BasketPage = ({ basket, setBasket }) => {
           </div>
         )}
       </main>
-      <Footer />
     </>
   );
 };
