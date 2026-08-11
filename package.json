@@ -1,0 +1,9 @@
+{
+  "name": "cakedelight-root",
+  "version": "1.0.0",
+  "description": "Root package for starting all services",
+  "scripts": {
+    "start": "node start-app.js",
+    "start-app": "node start-app.js"
+  }
+}

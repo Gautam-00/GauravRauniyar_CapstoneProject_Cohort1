@@ -3,10 +3,9 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 const ratingRoutes = require('./routes/ratingRoutes');
+const seedDatabase = require('./seed/seeder');
 
 dotenv.config();
-
-connectDB();
 
 const app = express();
 app.use(express.json());
@@ -17,6 +16,13 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3003;
 
-app.listen(PORT, () => {
-  console.log(`Rating Service running on port ${PORT}`);
-});
+const startServer = async () => {
+  await connectDB();
+  await seedDatabase();
+
+  app.listen(PORT, () => {
+    console.log(`Rating Service running on port ${PORT}`);
+  });
+};
+
+startServer();

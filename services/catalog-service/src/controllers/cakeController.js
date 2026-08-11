@@ -22,7 +22,40 @@ const getCakes = async (req, res, next) => {
       if (maxPrice) query.price.$lte = Number(maxPrice);
     }
     
-    const cakes = await Cake.find(query);
+    // 1. Fetch cakes from Catalog DB
+    let cakes = await Cake.find(query).lean(); // Use .lean() to easily attach properties
+
+    // 2. Fetch rating aggregates from Rating Service
+    const ratingServiceUrl = process.env.RATING_SERVICE_URL || 'http://localhost:3003';
+    const ratingResponse = await fetch(`${ratingServiceUrl}/ratings`);
+
+    if (!ratingResponse.ok) {
+      // Explicitly throw an error if Rating Service fails (network or HTTP error)
+      const err = new Error(`Rating Service responded with status ${ratingResponse.status}`);
+      err.status = ratingResponse.status;
+      throw err;
+    }
+
+    const ratingData = await ratingResponse.json();
+
+    // 3. Create a lookup map
+    const ratingMap = new Map();
+    ratingData.forEach(r => {
+      ratingMap.set(r.cakeId, {
+        totalRatings: r.totalRatings,
+        averageRating: r.averageRating
+      });
+    });
+
+    // 4. Enrich cakes with response-only rating object
+    cakes = cakes.map(cake => {
+      const rating = ratingMap.get(cake._id.toString()) || { totalRatings: 0, averageRating: 0 };
+      return {
+        ...cake,
+        rating
+      };
+    });
+    
     res.json(cakes);
   } catch (error) {
     next(error);
