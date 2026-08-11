@@ -44,7 +44,7 @@ const Header = ({ basket }) => {
           
           {showNotifications && (
             <div className="notifications-dropdown" style={{
-              position: 'absolute', right: 0, top: '100%', background: 'white', border: '1px solid #ddd', padding: '10px', width: '250px', zIndex: 10, boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '4px'
+              position: 'absolute', right: 0, top: '100%', background: 'white', border: '1px solid #ddd', padding: '10px', width: '280px', zIndex: 10, boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '4px', maxHeight: '350px', overflowY: 'auto'
             }}>
               {loadingNotifs ? (
                 <p>Loading notifications...</p>

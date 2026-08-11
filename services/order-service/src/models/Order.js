@@ -9,6 +9,10 @@ const orderItemSchema = new mongoose.Schema({
 
 const orderSchema = new mongoose.Schema({
   customerId: { type: String, required: true },
+  customerName: { type: String, required: true },
+  email: { type: String, required: true },
+  address: { type: String, required: true },
+  contactNo: { type: String, required: true },
   items: [orderItemSchema],
   totalAmount: { type: Number, required: true, min: 0 },
   status: { type: String, default: "COMPLETED" }

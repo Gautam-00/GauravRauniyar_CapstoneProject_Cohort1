@@ -11,7 +11,7 @@ const startConsumer = async (channel, queue) => {
         return channel.nack(msg, false, false); // No requeue
       }
 
-      const { orderId, customerId, totalAmount } = payload;
+      const { orderId, customerId, totalAmount, customerName, items } = payload;
       
       if (!orderId || !customerId || totalAmount === undefined) {
         console.error('Missing required fields, dropping message.');
@@ -19,7 +19,21 @@ const startConsumer = async (channel, queue) => {
       }
 
       try {
-        const message = `Your order ${orderId} has been completed successfully.`;
+        let cakeNames = "your items";
+        if (items && Array.isArray(items) && items.length > 0) {
+          const names = items.map(item => item.name);
+          if (names.length === 1) {
+            cakeNames = names[0];
+          } else if (names.length === 2) {
+            cakeNames = `${names[0]} and ${names[1]}`;
+          } else {
+            const last = names.pop();
+            cakeNames = `${names.join(', ')} and ${last}`;
+          }
+        }
+
+        const namePrefix = customerName ? `Hi ${customerName},\n` : '';
+        const message = `${namePrefix}Your order of : ${cakeNames} has been placed successfully.\nStay tuned we'll contact you once your order is ready to be delivered.\n\nYour Order ID: ${orderId}`;
         
         const notification = new Notification({
           customerId,

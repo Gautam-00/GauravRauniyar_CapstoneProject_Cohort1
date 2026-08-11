@@ -23,8 +23,9 @@ export const removeItemFromBasket = async (cakeId) => {
   }, true);
 };
 
-export const checkout = async () => {
+export const checkout = async (customerDetails = {}) => {
   return apiClient('/api/orders/checkout', {
-    method: 'POST'
+    method: 'POST',
+    body: customerDetails
   }, true);
 };

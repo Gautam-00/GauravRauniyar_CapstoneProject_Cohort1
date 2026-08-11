@@ -15,9 +15,13 @@ const OrderSuccessPage = () => {
         
         {order ? (
           <div style={{ background: '#f9f9f9', padding: '2rem', borderRadius: '8px', maxWidth: '500px', margin: '0 auto 2rem auto' }}>
-            <p style={{ margin: '0 0 1rem 0' }}><strong>Order ID:</strong> {order._id}</p>
-            <p style={{ margin: '0 0 1rem 0' }}><strong>Total Amount:</strong> ₹{order.totalAmount}</p>
-            <p style={{ margin: '0', color: '#666' }}>Your delicious cake is being prepared!</p>
+            <p style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>
+              Thank you for your order{order.customerName ? `, ${order.customerName}` : ''}!
+            </p>
+            <p style={{ margin: '0 0 2rem 0', color: '#666' }}>
+              Your order ID is <strong>{order._id}</strong>
+            </p>
+            <p style={{ margin: '0' }}><strong>Total Amount:</strong> ₹{order.totalAmount}</p>
           </div>
         ) : (
           <p style={{ marginBottom: '2rem' }}>We couldn't find your order details, but if you just placed one, it's being processed.</p>

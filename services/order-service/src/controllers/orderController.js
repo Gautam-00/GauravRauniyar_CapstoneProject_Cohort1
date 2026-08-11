@@ -6,6 +6,12 @@ const { publishOrderCompleted } = require('../services/rabbitmqPublisher');
 // POST /checkout
 const checkout = async (req, res, next) => {
   try {
+    const { customerName, email, address, contactNo } = req.body;
+
+    if (!customerName || !email || !address || !contactNo) {
+      return res.status(400).json({ message: 'customerName, email, address, and contactNo are required' });
+    }
+
     const basket = await Basket.findOne({ customerId: req.customerId });
     
     if (!basket || basket.items.length === 0) {
@@ -20,6 +26,10 @@ const checkout = async (req, res, next) => {
 
     const order = new Order({
       customerId: req.customerId,
+      customerName,
+      email,
+      address,
+      contactNo,
       items: basket.items,
       totalAmount,
       status: "COMPLETED" // Ready for future RabbitMQ event
@@ -37,6 +47,8 @@ const checkout = async (req, res, next) => {
       eventId: crypto.randomUUID(),
       orderId: order._id.toString(),
       customerId: req.customerId,
+      customerName,
+      items: basket.items.map(i => ({ name: i.name, quantity: i.quantity })),
       totalAmount,
       timestamp: new Date().toISOString()
     };
