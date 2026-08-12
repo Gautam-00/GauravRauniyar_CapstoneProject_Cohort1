@@ -1,0 +1,141 @@
+version: '3.8'
+
+networks:
+  cake-delight-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    networks:
+      - cake-delight-network
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --eval 'db.adminCommand(\"ping\")' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    networks:
+      - cake-delight-network
+    ports:
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: cakedelight
+      RABBITMQ_DEFAULT_PASS: cakedelight
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  rating-service:
+    build:
+      context: ./services/rating-service
+      dockerfile: Dockerfile
+    container_name: rating-service
+    networks:
+      - cake-delight-network
+    environment:
+      PORT: 3003
+      MONGO_URI: mongodb://mongodb:27017/rating_db
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+
+  catalog-service:
+    build:
+      context: ./services/catalog-service
+      dockerfile: Dockerfile
+    container_name: catalog-service
+    networks:
+      - cake-delight-network
+    environment:
+      PORT: 3001
+      MONGO_URI: mongodb://mongodb:27017/cake_catalog_db
+      RATING_SERVICE_URL: http://rating-service:3003
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+
+  order-service:
+    build:
+      context: ./services/order-service
+      dockerfile: Dockerfile
+    container_name: order-service
+    networks:
+      - cake-delight-network
+    environment:
+      PORT: 3002
+      MONGO_URI: mongodb://mongodb:27017/order_db
+      CATALOG_SERVICE_URL: http://catalog-service:3001
+      RABBITMQ_URL: amqp://cakedelight:cakedelight@rabbitmq:5672
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  notification-service:
+    build:
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    networks:
+      - cake-delight-network
+    environment:
+      PORT: 3004
+      MONGO_URI: mongodb://mongodb:27017/notification_db
+      RABBITMQ_URL: amqp://cakedelight:cakedelight@rabbitmq:5672
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  gateway:
+    build:
+      context: ./services/gateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    networks:
+      - cake-delight-network
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      CATALOG_SERVICE_URL: http://catalog-service:3001
+      ORDER_SERVICE_URL: http://order-service:3002
+      RATING_SERVICE_URL: http://rating-service:3003
+      NOTIFICATION_SERVICE_URL: http://notification-service:3004
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:3000
+    container_name: frontend
+    networks:
+      - cake-delight-network
+    ports:
+      - "5173:80"
+    restart: unless-stopped
