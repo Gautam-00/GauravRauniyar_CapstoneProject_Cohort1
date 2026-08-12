@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap');
 
 :root {
   /* Color Palette — warm, refined, bakery-inspired */
@@ -83,17 +83,43 @@ body {
 }
 
 .header h1 {
-  font-size: 1.6rem;
-  font-weight: var(--font-weight-heavy);
-  letter-spacing: -0.5px;
+  margin: 0;
 }
 
-.header h1 a {
-  background: linear-gradient(135deg, #B5542A, #D4627A);
+.brand-logo {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.brand-logo:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.brand-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(194, 112, 62, 0.25));
+}
+
+.brand-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #4A2511;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.brand-accent {
+  background: linear-gradient(135deg, #C2703E 0%, #E07A5F 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-style: italic;
+  font-weight: 800;
 }
 
 .nav {
@@ -102,20 +128,30 @@ body {
   align-items: center;
 }
 
-.nav a {
+.nav a,
+.nav button {
+  font-family: inherit;
   text-decoration: none;
   color: var(--color-text-secondary);
   font-weight: var(--font-weight-medium);
   font-size: 0.92rem;
   letter-spacing: 0.01em;
-  padding: 7px 16px;
+  padding: 8px 18px;
   border-radius: 50px;
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: rgba(45, 42, 38, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
 }
 
-.nav a:hover {
+.nav a:hover,
+.nav button:hover {
   color: var(--color-primary);
-  background-color: rgba(194, 112, 62, 0.08);
+  background-color: rgba(194, 112, 62, 0.1);
+  border-color: rgba(194, 112, 62, 0.15);
 }
 
 /* ─── Hero ─── */
@@ -169,11 +205,12 @@ body {
   box-shadow: var(--shadow-lg);
 }
 
-.hero-cta {
+.hero-cta,
+.btn {
   display: inline-block;
   padding: 12px 28px;
   background-color: var(--color-primary);
-  color: white;
+  color: white !important;
   text-decoration: none;
   border-radius: var(--border-radius-sm);
   font-weight: var(--font-weight-bold);
@@ -181,10 +218,15 @@ body {
   cursor: pointer;
   border: none;
   letter-spacing: 0.02em;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(194, 112, 62, 0.2);
 }
 
-.hero-cta:hover {
+.hero-cta:hover,
+.btn:hover {
   background-color: var(--color-primary-hover);
+  color: white !important;
+  transform: translateY(-1px);
 }
 
 /* ─── Filters ─── */
@@ -399,6 +441,22 @@ body {
 }
 
 /* ─── States ─── */
+.empty-basket-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 0;
+  text-align: center;
+}
+
+.empty-basket-title {
+  font-size: 1.4rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-main);
+  margin-bottom: 0.5rem;
+}
+
 .state-message {
   text-align: center;
   padding: 3rem 0;

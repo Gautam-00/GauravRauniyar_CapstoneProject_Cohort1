@@ -61,9 +61,9 @@ const BasketPage = ({ basket, setBasket }) => {
         {error && <div className="state-message error-message">{error}</div>}
 
         {items.length === 0 ? (
-          <div className="state-message">
-            <p>Your basket is empty.</p>
-            <Link to="/" className="btn">Browse Cakes</Link>
+          <div className="empty-basket-state">
+            <p className="empty-basket-title">Your basket is empty.</p>
+            <Link to="/" className="btn">Discover Cakes</Link>
           </div>
         ) : (
           <div className="basket-content">

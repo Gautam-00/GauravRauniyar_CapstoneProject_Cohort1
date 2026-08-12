@@ -31,7 +31,12 @@ const Header = ({ basket, notifications, markAsRead }) => {
 
   return (
     <header className="header container">
-      <h1><Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Cake Delight</Link></h1>
+      <h1>
+        <Link to="/" className="brand-logo">
+          <span className="brand-icon">🍰</span>
+          <span className="brand-name">Cake <span className="brand-accent">Delight</span></span>
+        </Link>
+      </h1>
       <nav className="nav">
         <Link to="/">Home</Link>
         <a href="/#menu" onClick={handleMenuClick}>Menu</a>
@@ -40,14 +45,13 @@ const Header = ({ basket, notifications, markAsRead }) => {
           <button 
             className="notifications-btn" 
             onClick={toggleNotifications}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 'inherit', color: 'inherit', padding: 0, position: 'relative' }}
           >
             🔔 Notifications
             {hasUnread && (
               <span style={{
                 position: 'absolute',
-                top: '-2px',
-                right: '-8px',
+                top: '6px',
+                right: '8px',
                 width: '8px',
                 height: '8px',
                 backgroundColor: '#e91e63',
