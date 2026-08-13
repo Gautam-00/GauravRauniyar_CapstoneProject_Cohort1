@@ -1,34 +1,96 @@
 # Deployment Guide
 
-This document details the processes for deploying and executing the **Cake Delight** application via **Docker Compose**, **Docker Hub Registry**, and **Kubernetes (Minikube)**.
+This document details the processes for deploying and executing the **Cake Delight** application via **Docker Compose**, **Docker Hub Registry**, **Docker Desktop Kubernetes**, and **Minikube**.
 
 ---
 
-## 1. Docker Compose Deployment (Local Integration)
+## 1. Docker Desktop Kubernetes Deployment (Zero Minikube Required)
 
 ### Prerequisites
-- **Docker Desktop** installed and running.
-- Ports `5173` (Frontend), `3000` (Gateway), and `15672` (RabbitMQ UI) available on host.
+1. **Docker Desktop** installed and running on Windows.
+2. **kubectl** installed (`winget install -e --id Kubernetes.kubectl`).
 
-### Commands
+### Steps from Clone to Running Site
+
+#### Step 1: Clone Repository
+```bash
+git clone https://github.com/Gautam-00/GauravRauniyar_CapstoneProject_Cohort1.git
+cd GauravRauniyar_CapstoneProject_Cohort1
+```
+
+#### Step 2: Enable Built-in Kubernetes in Docker Desktop
+1. Open **Docker Desktop**.
+2. Click **Settings ⚙️** (top right) ➔ **Kubernetes** (left sidebar).
+3. Check **"Enable Kubernetes"** ➔ Click **"Apply & restart"**.
+4. Wait 1–2 minutes until Docker Desktop bottom bar indicates `Kubernetes running`.
+
+#### Step 3: Deploy All Kubernetes Manifests
+```bash
+# Create namespace and deploy all 8 microservice workloads
+kubectl apply -f k8s/ --recursive
+```
+*(If run on a brand new cluster for the first time, execute the command a 2nd time so namespace registration completes).*
+
+#### Step 4: Verify All 8 Pods
+```bash
+# Check Pod status (wait ~30-45s for images to pull from Docker Hub)
+kubectl get pods -n cake-delight
+```
+
+#### Step 5: Port-Forward & Access Site
+```powershell
+# Run port-forwarding for Frontend (5173) and Gateway (3000)
+Start-Job { kubectl port-forward svc/frontend 5173:80 -n cake-delight } ; Start-Job { kubectl port-forward svc/gateway 3000:3000 -n cake-delight }
+```
+
+Open **`http://localhost:5173`** in your browser!
+
+---
+
+## 2. Minikube Deployment (Alternative Local Kubernetes)
+
+### Prerequisites
+1. **Docker Desktop** running (provides container engine driver).
+2. **Minikube** installed (`winget install -e --id Kubernetes.minikube`).
+3. **kubectl** installed (`winget install -e --id Kubernetes.kubectl`).
+
+### Execution Commands
+```bash
+# Start Minikube cluster
+minikube start --driver=docker
+
+# Apply manifests
+kubectl apply -f k8s/ --recursive
+
+# Check Pod readiness
+kubectl get pods -n cake-delight
+
+# Port forward
+kubectl port-forward svc/frontend 5173:80 -n cake-delight
+kubectl port-forward svc/gateway 3000:3000 -n cake-delight
+```
+
+Open **`http://localhost:5173`** in your browser!
+
+---
+
+## 3. Docker Compose Deployment (Local Integration from Source)
+
 ```bash
 # Build images and start all 8 containers in background
 docker compose up --build -d
 
-# View container status and logs
+# View status & logs
 docker compose ps
 docker compose logs -f
 
 # Stop containers while preserving data
 docker compose stop
-
-# Reset stack & delete database volume (forces re-seeding)
-docker compose down -v
 ```
 
 ---
 
-## 2. Docker Hub Image Registry
+## 4. Docker Hub Image Registry
 
 Six prebuilt custom application images are published publicly on Docker Hub under user `nemo0110`:
 
@@ -41,76 +103,8 @@ Six prebuilt custom application images are published publicly on Docker Hub unde
 
 ---
 
-## 3. Kubernetes Deployment (Minikube / Cluster)
-
-### Architecture
-- **Namespace**: `cake-delight`
-- **Workloads**: 8 Deployments (1 replica each) & 8 ClusterIP Services.
-- **Config & Secrets**: `cake-delight-config` (ConfigMap) & `cake-delight-secret` (Secret).
-- **Images**: Pulled directly from Docker Hub (`nemo0110/cake-delight-*:v1.0.0`).
-
-### Execution Commands
-
-#### A. Apply Namespace, Config, Secrets, & Workloads
-```bash
-# Create namespace and apply all manifests recursively
-kubectl apply -f k8s/ --recursive
-```
-
-#### B. Verify Cluster Status & Workloads
-```bash
-# Verify namespace resources
-kubectl get all -n cake-delight
-
-# Check Pod readiness and health
-kubectl get pods -n cake-delight
-```
-
-#### C. Local Browser Access (Port Forwarding)
-To access the frontend and gateway from your local browser:
-```bash
-# Port-forward Frontend
-kubectl port-forward svc/frontend 5173:80 -n cake-delight
-
-# Port-forward Gateway
-kubectl port-forward svc/gateway 3000:3000 -n cake-delight
-```
-
-- 🌐 **Frontend URL**: `http://localhost:5173`
-- 🚪 **Gateway /health**: `http://localhost:3000/health`
-
-#### D. Demonstrating Kubernetes Self-Healing
-To demonstrate automatic Pod recreation by the Deployment controller:
-```bash
-# Delete a stateless Pod
-kubectl delete pod -l app=catalog-service -n cake-delight
-
-# Verify Kubernetes immediately recreates a new healthy Pod
-kubectl get pods -n cake-delight
-```
-
-#### E. MongoDB Ephemeral Storage Limitation
-- **Storage**: Initial MVP uses `emptyDir` ephemeral storage.
-- **Behavior**: If the MongoDB Pod is deleted or recreated, previous database records reset. `catalog-service` and `rating-service` seeders automatically recreate 30 cakes & 30 initial ratings on fresh boot.
-
-#### F. Teardown / Cleanup
-```bash
-# Remove all Kubernetes resources and namespace
-kubectl delete namespace cake-delight
-```
-
----
-
-## 4. Application URLs & Credentials Summary
+## 5. Application URLs & Credentials Summary
 
 - 🌐 **React Frontend**: `http://localhost:5173/`
 - 🚪 **Express Gateway (Health Check)**: `http://localhost:3000/health`
 - 🐰 **RabbitMQ Credentials**: Username `cakedelight` / Password `cakedelight`
-
----
-
-## Roadmap Status
-- [x] Document Docker Compose orchestration and running instructions
-- [x] Document Docker Hub image tagging and registry structure
-- [x] Document Kubernetes (Minikube) manifests, port-forwarding, & self-healing
-- [ ] Document GitHub Actions CI/CD pipelines
