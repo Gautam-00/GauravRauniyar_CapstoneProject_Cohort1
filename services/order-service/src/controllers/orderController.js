@@ -38,8 +38,6 @@ const checkout = async (req, res, next) => {
     await order.save();
 
     // Clear basket
-    // Consistency Limitation: If this delete fails, the order exists but basket isn't cleared.
-    // MVP accepts this risk.
     await Basket.deleteOne({ _id: basket._id });
 
     // Publish ORDER_COMPLETED event to RabbitMQ
@@ -53,8 +51,6 @@ const checkout = async (req, res, next) => {
       timestamp: new Date().toISOString()
     };
     
-    // MVP Consistency Limitation: Fire and forget.
-    // If publish fails, order is placed but notification is never sent.
     await publishOrderCompleted(eventPayload);
 
     res.status(201).json(order);
