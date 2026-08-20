@@ -8,13 +8,11 @@ const connectRabbitMQ = async () => {
     const connection = await amqp.connect(rabbitMqUrl);
     channel = await connection.createChannel();
     
-    // Explicitly declaring exchange to ensure it exists
     await channel.assertExchange('cakedelight.events', 'direct', { durable: true });
     
     console.log('Order Service connected to RabbitMQ');
   } catch (error) {
     console.error('Failed to connect to RabbitMQ:', error.message);
-    // MVP limitation: not throwing error to avoid crashing Order Service if RabbitMQ is unavailable on boot.
   }
 };
 
